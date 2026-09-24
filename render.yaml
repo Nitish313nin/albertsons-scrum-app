@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: albertsons-shared-scrum
+    env: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DB_PATH
+        value: /data/albertsons.db
+    disk:
+      name: albertsons-data
+      mountPath: /data
+      sizeGB: 1
