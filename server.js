@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY AUTOINCREMENT,actor_id I
 `);
 const now=()=>new Date().toISOString();
 if(!db.prepare("SELECT 1 FROM project WHERE id=1").get())db.prepare("INSERT INTO project VALUES(1,?)").run("Albertsons Retail Data Modernization");
-if(!db.prepare("SELECT 1 FROM users WHERE lower(email)=lower(?)").get(OWNER)){db.prepare("INSERT INTO users(name,email,password_hash,role,created_at) VALUES(?,?,?,?,?)").run("Nitish Kumar",OWNER,bcrypt.hashSync("Nin@12345",12),"Owner",now())} else { db.prepare("UPDATE users SET password_hash=? WHERE lower(email)=lower(?)").run(bcrypt.hashSync("Nin@12345",12), OWNER); }
+if(!db.prepare("SELECT 1 FROM users WHERE lower(email)=lower(?)").get(OWNER)){db.prepare("INSERT INTO users(name,email,password_hash,role,created_at) VALUES(?,?,?,?,?)").run("Nitish Kumar",OWNER,bcrypt.hashSync("Nin@12345",12),"Owner",now())}
 app.use(express.json());app.use(session({secret:SECRET,resave:false,saveUninitialized:false,cookie:{httpOnly:true,sameSite:"lax",secure:process.env.NODE_ENV==="production",maxAge:604800000}}));app.use(express.static(path.join(__dirname,"public")));
 function me(req){return req.session.user&&db.prepare("SELECT id,name,email,role FROM users WHERE id=?").get(req.session.user.id)}
 function auth(req,res,next){req.user=me(req);if(!req.user)return res.status(401).json({error:"Login required"});next()}
