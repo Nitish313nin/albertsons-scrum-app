@@ -11,7 +11,7 @@ async function api(u,o={}){let r=await fetch(u,{headers:{"Content-Type":"applica
 async function login(){try{ME=(await api("/api/login",{method:"POST",body:JSON.stringify({email:em.value,password:pw.value})})).user;$("login").style.display="none";$("app").style.display="block";load()}catch(e){msg.textContent=e.message}}
 async function setupOwner(){try{if(em.value.trim().toLowerCase()!=="nitishkumar.nin@gmail.com"){msg.textContent="Owner email must be nitishkumar.nin@gmail.com";return}if(!pw.value||pw.value.length<8){msg.textContent="Enter an owner password of at least 8 characters";return}ME=(await api("/api/owner/setup",{method:"POST",body:JSON.stringify({email:em.value,password:pw.value})})).user;$("login").style.display="none";$("app").style.display="block";load()}catch(e){msg.textContent=e.message}}
 async function logout(){await api("/api/logout",{method:"POST"});location.reload()}
-async function load(){S=await api("/api/state");render()}
+async function load(){try{S=await api("/api/state");render()}catch(e){$("app").innerHTML="<div style='padding:30px'><h2>App Error</h2><p>"+esc(e.message)+"</p><button onclick='location.reload()'>Refresh</button></div>"}}
 function go(x){document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));$(x).classList.add("active");render()}
 function badge(x){let c=x==="Done"?"done":x==="In Progress"?"prog":x==="Testing"?"test":x==="Active"?"active":"";return `<span class="badge ${c}">${esc(x)}</span>`}
 function uname(id){return S.users.find(x=>x.id==id)?.name||"Unassigned"}function sname(id){return S.sprints.find(x=>x.id==id)?.name||"Backlog"}
